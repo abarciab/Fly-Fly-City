@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8adc8b4ac3f634d478a9dfe71e9ea683, type: 3}
+  m_Name: D - water
+  m_EditorClassIdentifier: 
+  questType: 1
+  name: Precious Water
+  description: Mika needs you to collect clear water from the treatment plant and
+    bring it to her at the bar. Find Thera in the facility - she'll provide you with
+    the water.
+  objectives:
+  - name: Pickup water
+    failureCondition: 0
+    stepNum: 0
+    hudDisplayText: Pick up <b>clear water</b> from the <b>Water Treatment Plant
+    type: 3
+    targetType: 2
+    numToKill: 6
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    item: {fileID: 11400000, guid: ce86d1bd5b1141247814850ab0607ef9, type: 2}
+    numToCollect: 1
+    display: 0
+    maxPoints: 10
+    points: 0
+    completionTriggerInt: 0
+    triggerString: 
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+  - name: Talk to Mika
+    failureCondition: 0
+    stepNum: 0.1
+    hudDisplayText: 
+    type: 0
+    targetType: 0
+    numToKill: 6
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    item: {fileID: 0}
+    numToCollect: 1
+    display: 0
+    maxPoints: 10
+    points: 0
+    completionTriggerInt: 0
+    triggerString: 
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+  - name: go to bar
+    failureCondition: 0
+    stepNum: 1
+    hudDisplayText: 
+    type: 2
+    targetType: 0
+    numToKill: 6
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    item: {fileID: 0}
+    numToCollect: 1
+    display: 1
+    maxPoints: 10
+    points: 0
+    completionTriggerInt: 3
+    triggerString: barlocation
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+  preCondition:
+    locations: 02000000
+    dayRange: {x: 0, y: 0}
+    minMaxLevel: {x: -1, y: -1}
+    requiredFacts: 00000000
+    numOppourtunities: -1
