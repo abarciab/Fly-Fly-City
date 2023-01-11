@@ -1,0 +1,77 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8adc8b4ac3f634d478a9dfe71e9ea683, type: 3}
+  m_Name: D - locket
+  m_EditorClassIdentifier: 
+  questType: 1
+  name: Locket
+  description: Lily wants you to deliver a sentimental locket to her fiance
+  objectives:
+  - name: Get locket from lily at the water treatment plant
+    failureCondition: 0
+    stepNum: 0
+    hudDisplayText: Get <b>locket </b>from <color=#83aef2>lily</color> at the <b>Water
+      Treatment Plant
+    type: 0
+    targetType: 2
+    numToKill: 6
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    item: {fileID: 11400000, guid: ce86d1bd5b1141247814850ab0607ef9, type: 2}
+    numToCollect: 1
+    display: 0
+    maxPoints: 10
+    points: 0
+    completionTriggerID: 0
+    triggerString: lilyFound
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+    completed: 0
+  - name: Deliver it to her fiancee across town, at the Uptown Hotel
+    failureCondition: 0
+    stepNum: 0.1
+    hudDisplayText: Deliver it to her fiancee across town, at the<b> Uptown Hotel
+    type: 0
+    targetType: 0
+    numToKill: 6
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    item: {fileID: 0}
+    numToCollect: 1
+    display: 0
+    maxPoints: 10
+    points: 0
+    completionTriggerID: 1
+    triggerString: testtrigger1
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+    completed: 0
+  preCondition:
+    locations: 02000000
+    dayRange: {x: 0, y: 0}
+    minMaxLevel: {x: -1, y: -1}
+    requiredFacts: 00000000
+    numOppourtunities: -1
+  hoursReqired: 2
+  destination: 3
+  ListingImg: {fileID: 0}
+  payment: 80
+  client: 6
+  objectiveStep: -1

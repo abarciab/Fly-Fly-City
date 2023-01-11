@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d771e009f9fd92d4ea797a29fcf941fe, type: 3}
+  m_Name: Lily1
+  m_EditorClassIdentifier: 
+  lines:
+  - line: 'Hey lily!
+
+'
+    metadata:
+      speaker: 1
+      index: 0
+      nextIndex: 1
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 616
+      speakerLeft: 1
+  - line: 'Heyyyyy
+
+'
+    metadata:
+      speaker: 6
+      index: 1
+      nextIndex: 2
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 9232
+      speakerLeft: 0
+  - line: 'can i have some water????
+
+'
+    metadata:
+      speaker: 1
+      index: 2
+      nextIndex: 3
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 4718
+      speakerLeft: 1
+  - line: 'Suuuure, for Mika??
+
+'
+    metadata:
+      speaker: 6
+      index: 3
+      nextIndex: 4
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 6834
+      speakerLeft: 0
+  - line: 'yaaaaaa
+
+'
+    metadata:
+      speaker: 1
+      index: 4
+      nextIndex: 5
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 4058
+      speakerLeft: 1
+  - line: 'okaaayyy
+
+'
+    metadata:
+      speaker: 6
+      index: 5
+      nextIndex: 6
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 2377
+      speakerLeft: 0
+  - line: 
+    metadata:
+      speaker: 6
+      index: 6
+      nextIndex: 7
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 1880
+      speakerLeft: 0
+  preCondition:
+    requiredFacts: 
+  completionEffect:
+    type: 2
+    items: {fileID: 0}
+    triggerID: 0

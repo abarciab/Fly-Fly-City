@@ -127,7 +127,11 @@ public class PlayerStateCoordinator : MonoBehaviour
     private void Update() {
         animator.SetFloat("abs hori vel", Mathf.Abs(rb.velocity.x + rb.velocity.z + (AnyInput()? 1 : 0) ));
         animator.SetFloat("vert vel", rb.velocity.y);
-        if (walkBehav) animator.SetBool("grounded", walkBehav.grounded);
+        if (walkBehav) {
+            animator.SetBool("grounded", walkBehav.grounded);
+            animator.SetBool("walking", AnyInput() && !Input.GetKey(GameManager.instance.runningKey));
+            animator.SetBool("running", AnyInput() && Input.GetKey(GameManager.instance.runningKey));
+        }
         if (climbBehav) animator.SetBool("climbing left", climbBehav.facingLeft);
     }
 

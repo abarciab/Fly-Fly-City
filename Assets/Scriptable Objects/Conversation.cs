@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Speaker { None, Nadira, Mika, Harlan, Noah, Kenny, Lily }
+
 [CreateAssetMenu(fileName ="New Convo")]
 public class Conversation : ScriptableObject
 {
@@ -29,6 +31,19 @@ public class Conversation : ScriptableObject
         public string line = "";
         public Metadata metadata = new Metadata();
     }
+    [System.Serializable]
+    public class Effect
+    {
+        public enum Type { none, item, questTrigger};
+        public Type type;
+
+        [ConditionalEnumHide(nameof(type), (int)Type.item)]
+        public Item items;
+
+        [ConditionalEnumHide(nameof(type), (int)Type.questTrigger)]
+        public int triggerID;
+    }
+
 
     [System.Serializable]
     public class Condition
@@ -38,6 +53,36 @@ public class Conversation : ScriptableObject
 
     public List<Line> lines = new List<Line>();
     public Condition preCondition = new Condition();
+    public Effect completionEffect = new Effect();
+    int index = -1;
+
+    public void StartConversation()
+    {
+        index = -1;
+    }
+    public void EndConvo()
+    {
+        index = -1;
+        if (completionEffect.type == Effect.Type.questTrigger) GameManager.instance.QuestTrigger(completionEffect.triggerID);
+    }
+
+    public Line GetNextLine()
+    {
+        index += 1;
+        var alt = GetAltLine(index);
+        if (alt != null) {
+            return alt;
+        }
+        if (index == lines.Count) return null;
+        return lines[index];
+    }
+
+    Line GetAltLine(int index)
+    {
+        //TODO: implement altlines
+        return null;
+    }
+
 
     public Line getLineByID(int ID) {
         for (int i = 0; i < lines.Count; i++) {
@@ -69,4 +114,4 @@ public class Conversation : ScriptableObject
     }
 }
 
-public enum Speaker {None, Nadira, Mika, Harlan, Noah, Kenny}
+

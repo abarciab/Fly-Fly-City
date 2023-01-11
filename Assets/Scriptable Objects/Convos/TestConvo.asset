@@ -76,3 +76,7 @@ MonoBehaviour:
       speakerLeft: 1
   preCondition:
     requiredFacts: 
+  completionEffect:
+    type: 0
+    items: {fileID: 0}
+    triggerID: 0

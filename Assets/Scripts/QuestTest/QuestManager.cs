@@ -19,12 +19,16 @@ public class QuestManager : MonoBehaviour {
         public string trigger;
     }
 
-    public static QuestManager instance;
 
+    public static QuestManager instance;
     [SerializeField] List<LocationData> locations = new List<LocationData>();
-    //[SerializeField] List<Quest> quests = new List<Quest>();
+    //uncompleted quests
+    //completed quests
     public Quest currentQuest;
     [SerializeField] List<QuestTrigger> questTriggers = new List<QuestTrigger>();
+
+    [HideInInspector] public QuestHUDCoordinator questHUD;
+
 
     private void Awake()
     {
@@ -45,6 +49,37 @@ public class QuestManager : MonoBehaviour {
 
     private void Start() {
         currentQuest.Init();
+        GameManager.OnQuestTrigger += RelayQuestTrigger;
+    }
+
+    public void RefeshQuestHUD()
+    {
+        if (currentQuest.IsStepCompleted()) {
+            currentQuest.NextStep();
+        }
+
+        questHUD.DisplayQuest();
+        //print("We just completed an objective and need to refresh the quest display, and maybe finish the quest");
+    }
+
+    public void CompleteQuest()
+    {
+        currentQuest = null;
+        questHUD.DisplayQuest();
+    }
+
+    void RelayQuestTrigger()
+    {
+        currentQuest.ObjectiveTrigger(GameManager.instance.currentQuestTrigger);
+    }
+
+    public void StartNewQuest(Quest newQuest)
+    {
+        currentQuest = newQuest;
+        currentQuest.Init();
+        if (questHUD) {
+            questHUD.DisplayQuest();
+        }
     }
 
     public string FetchTriggerString(int triggerID) {

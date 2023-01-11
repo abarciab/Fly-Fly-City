@@ -6,6 +6,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
 {
     [Header("Walking")]
     [SerializeField] float walkSpeed = 0.5f;
+    [SerializeField] float runSpeed = 1f;
     [SerializeField] float turnSpeed = 0.2f;
 
     [Header("Jumping")]
@@ -40,7 +41,8 @@ public class PlayerWalkingBehavior : MonoBehaviour
         model = transform.GetChild(0);
     }
 
-    void Update() {
+    void Update()
+    {
         if (!stateController) {
             Start();
             return;
@@ -49,8 +51,10 @@ public class PlayerWalkingBehavior : MonoBehaviour
         ProcessMovement();
         ApplyGravity();
         if (ShouldTakeOff()) TakeOff();
-    }   
+    }
     
+
+
     bool ShouldTakeOff() {
         return grounded && Input.GetKeyDown(manager.takeOffKey);
     }
@@ -89,7 +93,8 @@ public class PlayerWalkingBehavior : MonoBehaviour
             return;
         }
         Vector3 forceDir = GetWorldVectorFromAngle(angle);
-        rb.velocity = Vector3.Lerp(rb.velocity, forceDir * walkSpeed, turnSpeed);
+        bool running = Input.GetKey(manager.runningKey);
+        rb.velocity = Vector3.Lerp(rb.velocity, forceDir * (running ? runSpeed : walkSpeed), turnSpeed);
     }
 
     Vector3 GetWorldVectorFromAngle(float angle) {

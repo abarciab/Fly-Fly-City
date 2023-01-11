@@ -18,75 +18,95 @@ MonoBehaviour:
     bring it to her at the bar. Find Thera in the facility - she'll provide you with
     the water.
   objectives:
-  - name: Pickup water
+  - name: Talk to Lily at the water treatment plant
     failureCondition: 0
     stepNum: 0
-    hudDisplayText: Pick up <b>clear water</b> from the <b>Water Treatment Plant
-    type: 3
+    hudDisplayText: Talk to <color=#83aef2>Lily</color> at the <b>Water Treatment
+      Plant
+    type: 0
     targetType: 2
     numToKill: 6
+    leftToKill: 0
+    destinationType: 0
     destination: {x: 0, y: 0, z: 0}
     positionRadius: 0
-    item: {fileID: 11400000, guid: ce86d1bd5b1141247814850ab0607ef9, type: 2}
+    location: 0
+    item: 0
     numToCollect: 1
+    completionTriggerID: 0
+    triggerString: testtrigger1
     display: 0
     maxPoints: 10
     points: 0
-    completionTriggerInt: 0
-    triggerString: 
     reward:
       type: 0
       item: {fileID: 0}
       numToCollect: 1
       conversation: {fileID: 0}
       amount: 0
-  - name: Talk to Mika
-    failureCondition: 0
-    stepNum: 0.1
-    hudDisplayText: 
-    type: 0
-    targetType: 0
-    numToKill: 6
-    destination: {x: 0, y: 0, z: 0}
-    positionRadius: 0
-    item: {fileID: 0}
-    numToCollect: 1
-    display: 0
-    maxPoints: 10
-    points: 0
-    completionTriggerInt: 0
-    triggerString: 
-    reward:
-      type: 0
-      item: {fileID: 0}
-      numToCollect: 1
-      conversation: {fileID: 0}
-      amount: 0
-  - name: go to bar
+    completed: 0
+  - name: smuggle clear water out of treatment plant
     failureCondition: 0
     stepNum: 1
-    hudDisplayText: 
+    hudDisplayText: smuggle<b> clear water </b>out of <b>Water Treatment Plant
     type: 2
     targetType: 0
     numToKill: 6
+    leftToKill: 0
+    destinationType: 1
     destination: {x: 0, y: 0, z: 0}
     positionRadius: 0
-    item: {fileID: 0}
+    location: 0
+    item: 0
     numToCollect: 1
-    display: 1
+    completionTriggerID: 1
+    triggerString: testtrigger2
+    display: 0
     maxPoints: 10
     points: 0
-    completionTriggerInt: 3
-    triggerString: barlocation
     reward:
       type: 0
       item: {fileID: 0}
       numToCollect: 1
       conversation: {fileID: 0}
       amount: 0
+    completed: 0
+  - name: go to bar and deliver water to Mika
+    failureCondition: 0
+    stepNum: 1.1
+    hudDisplayText: Go to <b>Malady Bar</b> and deliver water to <color=#FF5555>Mika</color>
+    type: 0
+    targetType: 0
+    numToKill: 6
+    leftToKill: 0
+    destinationType: 0
+    destination: {x: 0, y: 0, z: 0}
+    positionRadius: 0
+    location: 1
+    item: 0
+    numToCollect: 1
+    completionTriggerID: 1
+    triggerString: TalkedToLily
+    display: 0
+    maxPoints: 10
+    points: 0
+    reward:
+      type: 0
+      item: {fileID: 0}
+      numToCollect: 1
+      conversation: {fileID: 0}
+      amount: 0
+    completed: 0
   preCondition:
     locations: 02000000
     dayRange: {x: 0, y: 0}
     minMaxLevel: {x: -1, y: -1}
     requiredFacts: 00000000
     numOppourtunities: -1
+  hoursReqired: 8.6
+  destination: 1
+  ListingImg: {fileID: 0}
+  payment: 150
+  client: 2
+  questCompleted: 0
+  objectiveStep: 0

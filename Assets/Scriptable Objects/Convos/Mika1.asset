@@ -1,0 +1,97 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d771e009f9fd92d4ea797a29fcf941fe, type: 3}
+  m_Name: Mika1
+  m_EditorClassIdentifier: 
+  lines:
+  - line: 'heyy
+
+'
+    metadata:
+      speaker: 1
+      index: 0
+      nextIndex: 1
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 8335
+      speakerLeft: 1
+  - line: 'yooo
+
+'
+    metadata:
+      speaker: 2
+      index: 1
+      nextIndex: 2
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 6887
+      speakerLeft: 0
+  - line: 'guess what i''ve got 4 u
+
+'
+    metadata:
+      speaker: 1
+      index: 2
+      nextIndex: 3
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 9596
+      speakerLeft: 1
+  - line: 'water???
+
+'
+    metadata:
+      speaker: 2
+      index: 3
+      nextIndex: 4
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 7969
+      speakerLeft: 0
+  - line: 'yes.
+
+'
+    metadata:
+      speaker: 1
+      index: 4
+      nextIndex: 5
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 3639
+      speakerLeft: 1
+  - line: 
+    metadata:
+      speaker: 1
+      index: 5
+      nextIndex: 6
+      priority: -1
+      requiredFacts: 
+      factEffects: 
+      complete: 0
+      ID: 233
+      speakerLeft: 1
+  preCondition:
+    requiredFacts: 
+  completionEffect:
+    type: 2
+    items: {fileID: 0}
+    triggerID: 1

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEditor;
 
 [ExecuteAlways]
 public class ConversationEditor : MonoBehaviour
@@ -87,11 +88,24 @@ public class ConversationEditor : MonoBehaviour
     }
 
     private void Update() {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying) {
+            if (currentConvo) {
+                SaveConvoData();
+                currentConvo = null;
+            }
+            return;
+        }
         if (DisplayInstructions()) return;
         if (Input.GetKeyDown(completeLineKey)) CompleteLine();
         if (Input.GetKeyDown(swapSpeakerKey)) SwapSpeakers();
         if (Input.GetKeyDown(newLineKey)) mainInputField.text += "/n";
+    }
+
+    void SaveConvoData()
+    {
+        EditorUtility.SetDirty(currentConvo);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
     void DisplayExistingLines() {
@@ -138,6 +152,7 @@ public class ConversationEditor : MonoBehaviour
         UpdateCurrentLineData();
         DrawMain();
         mainInputField.ActivateInputField();
+        SaveConvoData();
     }
 
     void StoreCurrentLine() {
@@ -296,6 +311,7 @@ public class ConversationEditor : MonoBehaviour
     }
 
     public void ResetConversation() {
+        print("RESET");
         currentConvo.ResetConversation();
         currentID = -1;
         previousLineRefs = new List<PreviousLineCoordinator>();
