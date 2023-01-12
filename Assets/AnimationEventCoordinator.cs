@@ -5,7 +5,7 @@ public class AnimationEventCoordinator : MonoBehaviour
 {
     public static Action NadiraFootstep;
 
-    public void NadiraFootStep(){
+    public void PlayNadiraFootstep(){
         if (NadiraFootstep != null) NadiraFootstep.Invoke();
     }
 }

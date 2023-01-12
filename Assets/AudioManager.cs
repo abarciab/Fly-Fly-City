@@ -12,17 +12,28 @@ public class AudioManager : MonoBehaviour {
         {
             [HideInInspector] public string name;
             public AudioClip clip;
-            [Range(0, 2)]
-            public float volume = 1;
-            [Range(0, 2)]
-            public float pitch = 1;
+            [Range(0, 2), Tooltip("if set to 0, this clip will use parent volume instead of local volume")]
+            public float localVolume = 1;
+            [Range(0, 2), Tooltip("if set to 0, this clip will use parent pitch instead of local pitch")]
+            public float localPitch = 1;
             public bool looping;
+
+            public Clip(Clip toCopy, float volume = -1, float pitch = -1) {
+                clip = toCopy.clip;
+                localVolume = volume == -1 ? toCopy.localVolume : volume;
+                localPitch = pitch == -1 ? toCopy.localPitch: pitch;
+                looping = toCopy.looping;
+            }
         }
 
         [HideInInspector] public string name;
         [HideInInspector] public int ID;
         [SerializeField] string displayName;
         [SerializeField] List<Clip> clips = new List<Clip>();
+        [Range(0, 2)]
+        public float parentVolume;
+        [Range(0, 2)]
+        public float parentPitch;
 
         public void OnValidate(int i)
         {
@@ -30,10 +41,6 @@ public class AudioManager : MonoBehaviour {
             for (i = 0; i < clips.Count; i++) {
                 if (clips[i].clip == null) continue;
                 clips[i].name = i + ": " + clips[i].clip.name;
-                if (clips[i].volume == 0 && clips[i].pitch == 0) {
-                    clips[i].volume = 1;
-                    clips[i].pitch = 1;
-                }
             }
 
             if (!string.IsNullOrEmpty(displayName)) {
@@ -50,12 +57,15 @@ public class AudioManager : MonoBehaviour {
         public Clip getClip(int _ID)
         {
             if (clips.Count == 0 || _ID != ID) return null;
-            return clips[Random.Range(0, clips.Count)];
+            Clip clip = clips[Random.Range(0, clips.Count)];
+            return new Clip(clip, clip.localVolume == 0 ? parentVolume : -1, clip.localPitch == 0 ? parentPitch : -1);
         }
     }
 
     public static AudioManager instance;
     [SerializeField] List<Sound> sounds = new List<Sound>();
+    [Range(0, 2)]
+    public float masterVolume = 1;
 
     private void OnValidate()
     {
@@ -113,8 +123,8 @@ public class AudioManager : MonoBehaviour {
     void ConfigureSource(Clip clip, AudioSource source)
     {
         source.clip = clip.clip;
-        source.volume = clip.volume;
-        source.pitch = clip.pitch;
+        source.volume = clip.localVolume * masterVolume;
+        source.pitch = clip.localPitch;
         source.loop = clip.looping;
     }
 

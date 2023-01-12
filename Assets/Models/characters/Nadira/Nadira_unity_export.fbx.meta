@@ -452,7 +452,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0
+        functionName: PlayNadiraFootstep
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: dd6ee84c413f86d4e9c2fed0aae1c674, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0.59217876
+        functionName: PlayNadiraFootstep
+        data: 
+        objectReferenceParameter: {fileID: 11500000, guid: dd6ee84c413f86d4e9c2fed0aae1c674, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
