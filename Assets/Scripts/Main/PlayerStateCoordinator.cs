@@ -7,6 +7,7 @@ public class PlayerStateCoordinator : MonoBehaviour
     public enum PossibleStates { walking, flying, climbing, falling}
     public PossibleStates currenState { get; private set; } = PossibleStates.walking;
     RigidbodyConstraints originalConstraints;
+    [SerializeField] bool debug;
 
     //dependencies
     [SerializeField] CapsuleCollider uprightCollider;
@@ -17,6 +18,7 @@ public class PlayerStateCoordinator : MonoBehaviour
     PlayerFlyingBehavior flyBehav;
     PlayerClimbingBehavior climbBehav;
     PlayerFallingBehavior fallingBehav;
+    
 
     private void Awake() {
         walkBehav = GetComponent<PlayerWalkingBehavior>();
@@ -136,6 +138,7 @@ public class PlayerStateCoordinator : MonoBehaviour
     }
 
     public void CallTrigger(string trigger) {
+        if (debug) print("triggerCalled: " + trigger);
         animator.SetTrigger(trigger);
     }
 
