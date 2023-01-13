@@ -18,7 +18,7 @@ public class PlayerFallingBehavior : MonoBehaviour
 
     void Update()
     {
-        bool grounded = walkBehav.IsGrounded();
+        bool grounded = walkBehav;
         if (grounded) {
             stateController.EnterWalkingState();
             return;

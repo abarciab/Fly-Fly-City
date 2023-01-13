@@ -21,6 +21,12 @@ public class PlayerWalkingBehavior : MonoBehaviour
     [SerializeField] float groundedCheckRadius = 0.01f;
     [SerializeField] bool showGroundCheck;
     [HideInInspector] public bool grounded { get; private set; } = true;
+
+    /*/[Header("Curb Check")]
+    [SerializeField] Vector3 curbCheckOffset;
+    [SerializeField] Vector3 curbCheckRayDir;
+    [SerializeField] bool showCurbCheck;*/
+
     
     float timeSinceJumpButton = 1000;
     
@@ -29,6 +35,37 @@ public class PlayerWalkingBehavior : MonoBehaviour
     GameManager manager;
     Transform model;
     Rigidbody rb;
+
+
+
+    //curb + advanced ground check stuff
+    List<ContactPoint> allContactPoints = new List<ContactPoint>();
+
+    private void OnCollisionEnter(Collision collision) {
+        allContactPoints.AddRange(collision.contacts);
+    }
+    private void OnCollisionStay(Collision collision) {
+        allContactPoints.AddRange(collision.contacts);
+    }
+
+    private void FixedUpdate() {
+        //print("Grounded: " + BetterGroundCheck(allContactPoints) + ", pointCount: " + allContactPoints.Count);
+        grounded = BetterGroundCheck(allContactPoints);
+
+        allContactPoints.Clear();
+    }
+
+    bool BetterGroundCheck(List<ContactPoint> cpList)  {
+        ContactPoint groundPoint = default;
+        bool found = false;
+        foreach (var point in cpList) {
+            if (point.normal.y > 0.0001f && (!found || point.normal.y > groundPoint.normal.y)) {
+                groundPoint = point;
+                found = true;
+            }
+        }
+        return found;
+    }
 
     void Start() {
         stateController = GetComponent<PlayerStateCoordinator>();
@@ -47,7 +84,6 @@ public class PlayerWalkingBehavior : MonoBehaviour
             Start();
             return;
         }
-        grounded = IsGrounded();
         ProcessMovement();
         ApplyGravity();
         if (ShouldTakeOff()) TakeOff();
@@ -63,7 +99,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
         stateController.EnterFlyingState();
     }
 
-    public bool IsGrounded() {
+    public bool IsGrounded() {        
         Collider[] colliders = Physics.OverlapSphere(transform.position + groundedCheckOffset, groundedCheckRadius);
         foreach (Collider collider in colliders) {
             if (collider.gameObject != gameObject && collider.gameObject.layer == groundLayer) {
@@ -174,8 +210,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
     }
 
     private void OnDrawGizmos() {
-        if (showGroundCheck) { 
-            Gizmos.DrawWireSphere(transform.position + groundedCheckOffset, groundedCheckRadius);
-        }
+        if (showGroundCheck) Gizmos.DrawWireSphere(transform.position + groundedCheckOffset, groundedCheckRadius);
+        //if (showCurbCheck) Gizmos.DrawWireSphere(transform.position + curbCheckOffset, curbCheckRadius);
     }
 }
