@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1652,6 +1652,7 @@ MonoBehaviour:
   rightKey: 100
   forwardKey: 119
   backKey: 115
+  runningKey: 304
   resetKey: 114
   facts: []
   itemDIsplayNames: []
@@ -5461,7 +5462,6 @@ GameObject:
   - component: {fileID: 2067436119}
   - component: {fileID: 2067436118}
   - component: {fileID: 2067436120}
-  - component: {fileID: 2067436121}
   m_Layer: 5
   m_Name: Dialogue
   m_TagString: Untagged
@@ -5559,20 +5559,6 @@ MonoBehaviour:
   - name: 6
     portrait: {fileID: 21300000, guid: c324196a64a70974397201317b929289, type: 3}
     color: {r: 0.31719476, g: 0.7329918, b: 0.8301887, a: 1}
---- !u!114 &2067436121
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2067436116}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a04ac1e7d8bee2240a6f74f1f9236e91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  convo: {fileID: 11400000, guid: b2b622456192f1248b61b17d7d56c825, type: 2}
-  startConvo: 0
 --- !u!224 &559389076367705376 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5395730977638559328, guid: 9216de7cae4618348a57463f34fce157, type: 3}

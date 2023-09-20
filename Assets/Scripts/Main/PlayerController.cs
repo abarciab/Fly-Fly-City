@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
+using static Constants;
 
 public class PlayerController : MonoBehaviour {
     [System.Serializable]
@@ -187,7 +188,7 @@ public class PlayerController : MonoBehaviour {
             //ProcessClimbing();
         }
 
-        if (grounded && !flying && Input.GetKeyDown(GameManager.instance.takeOffKey)) {
+        if (grounded && !flying && Input.GetKeyDown(takeOffKey)) {
             //TakeOffFromGround();
         }
         //ProcessCombat();
@@ -229,19 +230,19 @@ public class PlayerController : MonoBehaviour {
         bool keyboard = false;
 
         if (keyboard) {
-            if (Input.GetKey(manager.forwardKey)) {
+            if (Input.GetKey(forwardKey)) {
                 currentPitch += pitchChangeRate;
                 transform.Rotate(pitchChangeRate, 0, 0);
             }
-            else if (Input.GetKey(manager.backKey)) {
+            else if (Input.GetKey(backKey)) {
                 currentPitch -= pitchChangeRate;
                 transform.Rotate(-pitchChangeRate, 0, 0);
             }
 
-            if (Input.GetKey(manager.leftKey)) {
+            if (Input.GetKey(leftKey)) {
                 transform.Rotate(0, 0, rollSpeed);
             }
-            if (Input.GetKey(manager.rightKey)) {
+            if (Input.GetKey(rightKey)) {
                 transform.Rotate(0, 0, -rollSpeed);
             }
         }
@@ -299,7 +300,7 @@ public class PlayerController : MonoBehaviour {
             var y4 = Vector3.Angle(hit.normal, new Vector3(0, 0, -1));
             var yAngle = y3 == y4 ? y1 - 90 : y4;
 
-            if (!(Input.GetKey(GameManager.instance.forwardKey) && hit.distance > minSwoopDist)) {
+            if (!(Input.GetKey(forwardKey) && hit.distance > minSwoopDist)) {
                 bool validLanding = angleXZ > validLandingAngleRange.x && angleXZ < validLandingAngleRange.y;
                 if (validLanding) {
                     print("land!");
@@ -325,7 +326,7 @@ public class PlayerController : MonoBehaviour {
             var yAngle = y3==y4? y1-90 : y4;
             print("1: " + y1 + ", -1: " + y2 + ", 01: " + y3 + ", 0-1: " + y4);
 
-            if (!(Input.GetKey(GameManager.instance.forwardKey) && hit.distance > minSwoopDist)) {
+            if (!(Input.GetKey(forwardKey) && hit.distance > minSwoopDist)) {
                 bool validLanding = angleXZ > validLandingAngleRange.x && angleXZ < validLandingAngleRange.y;
                 if (validLanding) {
                     //print("land!");
@@ -345,11 +346,11 @@ public class PlayerController : MonoBehaviour {
     {
         if (!flying) { return; }
 
-        if (Input.GetKeyDown(manager.landKey)) {
+        if (Input.GetKeyDown(landKey)) {
             Land();
             return;
         }
-        if (Input.GetKeyDown(manager.jumpKey) && (remainingFlaps >= 1 || extraFlaps > 0)) {
+        if (Input.GetKeyDown(jumpKey) && (remainingFlaps >= 1 || extraFlaps > 0)) {
             if (extraFlaps > 0) {
                 extraFlaps -= 1;
             }
@@ -434,16 +435,16 @@ public class PlayerController : MonoBehaviour {
         //print("anchor + offset: " + currentAnchor + ", " + anchorOffset);
         transform.position = currentAnchor;
 
-        if (Input.GetKeyDown(GameManager.instance.leftKey)) {
+        if (Input.GetKeyDown(leftKey)) {
             climbingLeft = true;
         }
-        if (Input.GetKeyDown(GameManager.instance.rightKey)) {
+        if (Input.GetKeyDown(rightKey)) {
             climbingLeft = false;
         }
 
         animator.SetBool("climbingLeft", climbingLeft);
 
-        if (Input.GetKeyDown(GameManager.instance.takeOffKey)) {
+        if (Input.GetKeyDown(takeOffKey)) {
             transform.localEulerAngles += Vector3.up * 180;
             transform.position += transform.forward * 2;
             climbing = false;
@@ -481,10 +482,10 @@ public class PlayerController : MonoBehaviour {
         //localChildEulers.y = GameManager.instance.Circularize(localChildEulers.y, false);
         animator.transform.localEulerAngles = localChildEulers;
 
-        bool f = Input.GetKey(GameManager.instance.forwardKey);
-        bool b = Input.GetKey(GameManager.instance.backKey);
-        bool l = Input.GetKey(GameManager.instance.leftKey);
-        bool r = Input.GetKey(GameManager.instance.rightKey);
+        bool f = Input.GetKey(forwardKey);
+        bool b = Input.GetKey(backKey);
+        bool l = Input.GetKey(leftKey);
+        bool r = Input.GetKey(rightKey);
 
         bool pickAltChildRot = false;
         Vector2 normalAndAltChildRotTargets = Vector2.one * localChildEulers.y;
@@ -607,7 +608,7 @@ public class PlayerController : MonoBehaviour {
 
         bool jumpFall = false; 
 
-        if (Input.GetKeyDown(manager.jumpKey)) {
+        if (Input.GetKeyDown(jumpKey)) {
             timeSinceJumpButton = 0;
             /*if (!grounded && manager.facts.Contains("wingsUnlocked")) {
                 TakeOff();

@@ -44,6 +44,29 @@ public class CameraController : MonoBehaviour
     [SerializeField] PlayerStateCoordinator stateController;
     GameObject cameraParent;
 
+    [Header("Conversation")]
+    [SerializeField] Transform speaker;
+
+    public void StartConversation(Transform _speaker)
+    {
+        speaker = _speaker;
+    }
+
+    public void EndConversation()
+    {
+        speaker = null;
+    }
+
+    public void LookAtPlayer()
+    {
+        transform.LookAt(player.transform);
+    }
+
+    public void LookAtSpeaker()
+    {
+        transform.LookAt(speaker);
+    }
+
     void Start()
     {
         realOriginalCamPos = transform.localPosition;
@@ -57,6 +80,12 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
+        if (speaker != null)
+        {
+            //FocusOnCurrentSpeaker();
+            return;
+        }
+
         if (Application.isPlaying) {
             if (Input.GetButtonDown("Fire1") && !mouseEnabled) {
                 LockMouse();
@@ -66,9 +95,13 @@ public class CameraController : MonoBehaviour
             PreventCamClipping();
         }
         else {
-            
             MoveCam();
         }        
+    }
+
+    void FocusOnCurrentSpeaker()
+    {
+        transform.LookAt(speaker);
     }
 
     void ProcessMouseInput()
@@ -77,7 +110,7 @@ public class CameraController : MonoBehaviour
         float horizontal = Input.GetAxis("Mouse X") * mouseRotSpeedY;
         float vertical = -Input.GetAxis("Mouse Y") * mouseRotSpeedX;
 
-        if (followWhenFlying && stateController.currenState == PlayerStateCoordinator.PossibleStates.flying) {
+        if (followWhenFlying && stateController.currenState == PossiblePlayerStates.flying) {
             return;
         }
         inputs.y += horizontal;
@@ -88,7 +121,7 @@ public class CameraController : MonoBehaviour
     {
         if (cameraParent == null) { cameraParent = transform.parent.gameObject; }
         
-        if (followWhenFlying && stateController.currenState == PlayerStateCoordinator.PossibleStates.flying) {
+        if (followWhenFlying && stateController.currenState == PossiblePlayerStates.flying) {
             float playerY = player.transform.localEulerAngles.y;
             if (Mathf.Abs(inputs.y - playerY) > 180 && Mathf.Abs(inputs.y - playerY) < 360) {
                 if (inputs.y > playerY) {
@@ -130,7 +163,7 @@ public class CameraController : MonoBehaviour
                 StartCoroutine("TransitionBackToNormalCam");
             }
             float largestLimitDist = Mathf.Max(Mathf.Abs(parentRotXlimits.x - defaultX), Mathf.Abs(parentRotXlimits.y - defaultX));
-            float percentFromMiddle = (Mathf.Abs(inputs.x - defaultX) / largestLimitDist) * (stateController.currenState == PlayerStateCoordinator.PossibleStates.flying ? 0 : 1);
+            float percentFromMiddle = (Mathf.Abs(inputs.x - defaultX) / largestLimitDist) * (stateController.currenState == PossiblePlayerStates.flying ? 0 : 1);
             Vector3 pos = transform.localPosition;
             pos.z = baseZ + (angleZoomDist * percentFromMiddle) + clippingZOffset;
             transform.localPosition = pos;
@@ -171,7 +204,7 @@ public class CameraController : MonoBehaviour
             count++; 
             Physics.Raycast(transform.position, player.transform.position - transform.position, out var hit);
             if (count < 300 && hit.collider != null && hit.collider.tag != "Player" && Mathf.Abs(transform.localPosition.z - cameraLookTarget.transform.localPosition.z) > minDistFromCamTarget) {
-                clippingZOffset += clipZoomSpeed;
+                clippingZOffset = Mathf.Min(clippingZOffset + clipZoomSpeed, 3);
                 modifiedPos += Vector3.forward * clipZoomSpeed;
                 transform.localPosition += Vector3.forward * clipZoomSpeed;
             }

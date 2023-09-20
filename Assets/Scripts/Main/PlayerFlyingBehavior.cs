@@ -29,6 +29,11 @@ public class PlayerFlyingBehavior : MonoBehaviour
     [SerializeField] Vector2 validLandingAngleRange;
     [SerializeField] Vector2 validWallAngleRange;
 
+    [Header("windtipWind")]
+    [SerializeField] TrailRenderer wingTipwind1;
+    [SerializeField] TrailRenderer wingTipwind2;
+    [SerializeField] float wingTipTime = 0.1f;
+
     //dependencies
     [SerializeField] GameObject rightWingtip;
     [SerializeField] GameObject leftWingtip;
@@ -46,6 +51,12 @@ public class PlayerFlyingBehavior : MonoBehaviour
 
     private void OnEnable() {
         flapsRemaining = maxFlaps;
+        wingTipwind1.time = wingTipwind2.time = wingTipTime;
+    }
+
+    private void OnDisable()
+    {
+        wingTipwind1.time = wingTipwind2.time = 0;
     }
 
     private void Update() {
@@ -70,7 +81,8 @@ public class PlayerFlyingBehavior : MonoBehaviour
     }
 
     bool ShouldFlap() {
-        return Input.GetKeyDown(GameManager.instance.jumpKey) && (flapsRemaining > 0);
+        return Input.GetKeyDown(Constants.jumpKey) && (flapsRemaining > 0);
+
     }
 
     void Flap() {

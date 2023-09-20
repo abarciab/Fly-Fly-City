@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
+using static Constants;
 
 public class PlayerWalkingBehavior : MonoBehaviour
 {
@@ -20,52 +22,31 @@ public class PlayerWalkingBehavior : MonoBehaviour
     [SerializeField] Vector3 groundedCheckOffset = new Vector3();
     [SerializeField] float groundedCheckRadius = 0.01f;
     [SerializeField] bool showGroundCheck;
-    [HideInInspector] public bool grounded { get; private set; } = true;
+    [HideInInspector] public bool grounded = true;
 
-    /*/[Header("Curb Check")]
-    [SerializeField] Vector3 curbCheckOffset;
-    [SerializeField] Vector3 curbCheckRayDir;
-    [SerializeField] bool showCurbCheck;*/
+    [Header("Stepping")]
+    [SerializeField] float stepUpForce;
+    [SerializeField] CollisionChecker stepChecker, airChecker;
 
-    
+    bool paused;
     float timeSinceJumpButton = 1000;
     
-    //dependencies
+
     PlayerStateCoordinator stateController;
     GameManager manager;
     Transform model;
     Rigidbody rb;
 
-
-
-    //curb + advanced ground check stuff
-    List<ContactPoint> allContactPoints = new List<ContactPoint>();
-
-    private void OnCollisionEnter(Collision collision) {
-        allContactPoints.AddRange(collision.contacts);
-    }
-    private void OnCollisionStay(Collision collision) {
-        allContactPoints.AddRange(collision.contacts);
+    public void SetPaused(bool _paused)
+    {
+        paused = _paused;
     }
 
-    private void FixedUpdate() {
-        //print("Grounded: " + BetterGroundCheck(allContactPoints) + ", pointCount: " + allContactPoints.Count);
-        grounded = BetterGroundCheck(allContactPoints);
-
-        allContactPoints.Clear();
+    private void FixedUpdate()
+    {
+        stateController.allContactPoints.Clear();
     }
 
-    bool BetterGroundCheck(List<ContactPoint> cpList)  {
-        ContactPoint groundPoint = default;
-        bool found = false;
-        foreach (var point in cpList) {
-            if (point.normal.y > 0.0001f && (!found || point.normal.y > groundPoint.normal.y)) {
-                groundPoint = point;
-                found = true;
-            }
-        }
-        return found;
-    }
 
     void Start() {
         stateController = GetComponent<PlayerStateCoordinator>();
@@ -80,26 +61,34 @@ public class PlayerWalkingBehavior : MonoBehaviour
 
     void Update()
     {
+        if (paused) {
+            rb.velocity = Vector3.zero;
+            return;
+        }
+
         if (!stateController) {
             Start();
             return;
         }
+
         ProcessMovement();
         ApplyGravity();
         if (ShouldTakeOff()) TakeOff();
+        grounded = IsGrounded();
+        stateController.grounded = grounded;
     }
     
 
 
     bool ShouldTakeOff() {
-        return grounded && Input.GetKeyDown(manager.takeOffKey);
+        return grounded && Input.GetKeyDown(takeOffKey) && !GameManager.instance.insideLocation;
     }
 
     void TakeOff() {
         stateController.EnterFlyingState();
     }
 
-    public bool IsGrounded() {        
+    bool IsGrounded() {        
         Collider[] colliders = Physics.OverlapSphere(transform.position + groundedCheckOffset, groundedCheckRadius);
         foreach (Collider collider in colliders) {
             if (collider.gameObject != gameObject && collider.gameObject.layer == groundLayer) {
@@ -129,8 +118,13 @@ public class PlayerWalkingBehavior : MonoBehaviour
             return;
         }
         Vector3 forceDir = GetWorldVectorFromAngle(angle);
-        bool running = Input.GetKey(manager.runningKey);
+        bool running = Input.GetKey(runningKey) && !GameManager.instance.insideLocation;
         rb.velocity = Vector3.Lerp(rb.velocity, forceDir * (running ? runSpeed : walkSpeed), turnSpeed);
+
+        var forwardSpeed = model.forward * Vector3.Dot(model.forward, rb.velocity);
+        if (stepChecker.colliding && !airChecker.colliding && forwardSpeed.magnitude > 0) {
+            rb.AddForce(Vector3.up * stepUpForce);
+        }
     }
 
     Vector3 GetWorldVectorFromAngle(float angle) {
@@ -157,10 +151,10 @@ public class PlayerWalkingBehavior : MonoBehaviour
 
     int GetInputAngle() {
         int angle = -1;
-        bool f = Input.GetKey(manager.forwardKey);
-        bool b = Input.GetKey(manager.backKey);
-        bool l = Input.GetKey(manager.leftKey);
-        bool r = Input.GetKey(manager.rightKey);
+        bool f = Input.GetKey(forwardKey);
+        bool b = Input.GetKey(backKey);
+        bool l = Input.GetKey(leftKey);
+        bool r = Input.GetKey(rightKey);
 
         if (f && r) angle = 45;
         else if (f && l) angle = 315;
@@ -193,7 +187,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
 
     bool ShouldJump() {
         timeSinceJumpButton += Time.deltaTime;
-        if (Input.GetKeyDown(manager.jumpKey)) {
+        if (Input.GetKeyDown(jumpKey)) {
             timeSinceJumpButton = 0;
         }
         if (grounded && timeSinceJumpButton <= jumpBufferMax) 
@@ -204,13 +198,12 @@ public class PlayerWalkingBehavior : MonoBehaviour
 
     void Jump() {
         stateController.CallTrigger("jump");
-        grounded = false;
+        //stateControllergrounded = false;
         timeSinceJumpButton = jumpBufferMax + 1;
         rb.AddForce(Vector3.up * (jumpForce * 10), ForceMode.Impulse);
     }
 
     private void OnDrawGizmos() {
         if (showGroundCheck) Gizmos.DrawWireSphere(transform.position + groundedCheckOffset, groundedCheckRadius);
-        //if (showCurbCheck) Gizmos.DrawWireSphere(transform.position + curbCheckOffset, curbCheckRadius);
     }
 }

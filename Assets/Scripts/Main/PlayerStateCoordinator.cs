@@ -1,24 +1,68 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
+
+public enum PossiblePlayerStates { walking, flying, climbing, falling }
 
 public class PlayerStateCoordinator : MonoBehaviour
 {
-    public enum PossibleStates { walking, flying, climbing, falling}
-    public PossibleStates currenState { get; private set; } = PossibleStates.walking;
+    public PossiblePlayerStates currenState { get; private set; } = PossiblePlayerStates.walking;
     RigidbodyConstraints originalConstraints;
     [SerializeField] bool debug;
-
-    //dependencies
+    
     [SerializeField] CapsuleCollider uprightCollider;
     [SerializeField] CapsuleCollider FlightCollider;
-    Animator animator;
+    [SerializeField] Animator anim;
+    [SerializeField] Transform model;
+
+
     [HideInInspector] public Rigidbody rb;
     PlayerWalkingBehavior walkBehav;
     PlayerFlyingBehavior flyBehav;
     PlayerClimbingBehavior climbBehav;
     PlayerFallingBehavior fallingBehav;
-    
+
+    [HideInInspector] public bool grounded;
+
+    [HideInInspector] public List<ContactPoint> allContactPoints = new List<ContactPoint>();
+    [HideInInspector] public ContactPoint groundPoint;
+    bool paused;
+
+    public void SetPaused(bool _paused)
+    {
+        paused = _paused;
+        walkBehav.SetPaused(_paused);
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        allContactPoints.AddRange(collision.contacts);
+    }
+    private void OnCollisionStay(Collision collision)
+    {
+        allContactPoints.AddRange(collision.contacts);
+    }
+
+    private void FixedUpdate()
+    {
+        //grounded = groundedCheck(out groundPoint, allContactPoints);
+
+        if (!walkBehav.enabled) allContactPoints.Clear();
+    }
+
+    public bool groundedCheck(out ContactPoint groundPoint, List<ContactPoint> cpList)
+    {
+        groundPoint = default;
+        bool found = false;
+        foreach (var point in cpList) {
+            if (point.normal.y > 0.0001f && (!found || point.normal.y > groundPoint.normal.y)) {
+                groundPoint = point;
+                found = true;
+            }
+        }
+        return found;
+    }
 
     private void Awake() {
         walkBehav = GetComponent<PlayerWalkingBehavior>();
@@ -26,9 +70,6 @@ public class PlayerStateCoordinator : MonoBehaviour
         climbBehav = GetComponent<PlayerClimbingBehavior>();
         fallingBehav = GetComponent<PlayerFallingBehavior>();
         rb = GetComponent<Rigidbody>();
-
-        animator = GetComponentInChildren<Animator>();
-        GameManager.instance.player = this;
     }
 
     private void Start() {
@@ -38,7 +79,7 @@ public class PlayerStateCoordinator : MonoBehaviour
     public void EnterWalkingState() {
         if (!walkBehav) { return; }
         DisableAllStates();
-        currenState  = PossibleStates.walking;
+        currenState  = PossiblePlayerStates.walking;
         if (FlightCollider.enabled) {
             FlightToNonFlightTransition();
         }
@@ -49,12 +90,12 @@ public class PlayerStateCoordinator : MonoBehaviour
     public void EnterClimbingState(RaycastHit hit) {
         if (!climbBehav) { return; }
         DisableAllStates();
-        currenState = PossibleStates.climbing;
+        currenState = PossiblePlayerStates.climbing;
         
 
         transform.localRotation = Quaternion.FromToRotation(Vector3.right, hit.normal);
         transform.Rotate(0, -90, 0);
-        animator.transform.localEulerAngles = new Vector3(0, 0, 0);
+        model.localEulerAngles = new Vector3(0, 0, 0);
         transform.position = hit.point + (transform.forward * -climbBehav.anchorOffset);
         rb.velocity = Vector3.zero;
         if (FlightCollider.enabled) {
@@ -69,7 +110,7 @@ public class PlayerStateCoordinator : MonoBehaviour
         bool takeOffFromGround = false;
         if (walkBehav.enabled) takeOffFromGround = true;
         DisableAllStates();
-        currenState = PossibleStates.flying;
+        currenState = PossiblePlayerStates.flying;
 
         if (!takeOffFromGround) {
             CallTrigger("take off air");
@@ -81,8 +122,8 @@ public class PlayerStateCoordinator : MonoBehaviour
     }
 
     void TakeOffFromGround() {
-        transform.localEulerAngles += Vector3.up * animator.transform.localEulerAngles.y;
-        animator.transform.localEulerAngles = new Vector3(0, 0, 0);
+        transform.localEulerAngles += Vector3.up * model.localEulerAngles.y;
+        model.localEulerAngles = new Vector3(0, 0, 0);
 
         CallTrigger("take off ground");
         StartCoroutine(DelayedTakeOffFromGround());
@@ -100,7 +141,7 @@ public class PlayerStateCoordinator : MonoBehaviour
     public void EnterFallingState() { 
         if (!fallingBehav) { return; }
         DisableAllStates();
-        currenState = PossibleStates.falling;
+        currenState = PossiblePlayerStates.falling;
 
         CallTrigger("start falling");
         fallingBehav.enabled = true;
@@ -127,28 +168,29 @@ public class PlayerStateCoordinator : MonoBehaviour
     }
 
     private void Update() {
-        animator.SetFloat("abs hori vel", Mathf.Abs(rb.velocity.x + rb.velocity.z + (AnyInput()? 1 : 0) ));
-        animator.SetFloat("vert vel", rb.velocity.y);
+        anim.SetFloat("abs hori vel", Mathf.Abs(rb.velocity.x + rb.velocity.z + (AnyInput()? 1 : 0) ));
+        anim.SetFloat("vert vel", rb.velocity.y);
         if (walkBehav) {
-            animator.SetBool("grounded", walkBehav.grounded);
-            animator.SetBool("walking", AnyInput() && !Input.GetKey(GameManager.instance.runningKey));
-            animator.SetBool("running", AnyInput() && Input.GetKey(GameManager.instance.runningKey));
+            anim.SetBool("grounded", grounded);
+            bool running = Input.GetKey(runningKey) && !GameManager.instance.insideLocation;
+            anim.SetBool("walking", AnyInput() && !running);
+            anim.SetBool("running", AnyInput() && running);
         }
-        if (climbBehav) animator.SetBool("climbing left", climbBehav.facingLeft);
+        if (climbBehav) anim.SetBool("climbing left", climbBehav.facingLeft);
     }
 
     public void CallTrigger(string trigger) {
         if (debug) print("triggerCalled: " + trigger);
-        animator.SetTrigger(trigger);
+        anim.SetTrigger(trigger);
     }
 
     bool AnyInput() {
         GameManager manager = GameManager.instance;
-        bool f = Input.GetKey(manager.forwardKey);
-        bool b = Input.GetKey(manager.backKey);
-        bool l = Input.GetKey(manager.leftKey);
-        bool r = Input.GetKey(manager.rightKey);
+        bool f = Input.GetKey(forwardKey);
+        bool b = Input.GetKey(backKey);
+        bool l = Input.GetKey(leftKey);
+        bool r = Input.GetKey(rightKey);
 
-        return (f || b || l || r);
+        return (!paused && (f || b || l || r) );
     }
 }

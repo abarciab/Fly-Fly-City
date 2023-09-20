@@ -4,13 +4,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-[ExecuteAlways]
-public class SpeakerGalleryElement : MonoBehaviour
+public class SpeakerGalleryElement: MonoBehaviour
 {
-    public Speaker characterName;
+    /*
+    public SpeakerType characterName;
     ConversationEditor.TEMPPORTRAITCOLORS identity;
 
-    //dependencies
     [SerializeField] TextMeshProUGUI nameText;
     [SerializeField] Image portrait;
     public int lastUpdate;
@@ -44,4 +43,5 @@ public class SpeakerGalleryElement : MonoBehaviour
         ConversationEditor.instance.activeMainSpeaker.OnValidate();
         ConversationEditor.instance.ActivateTextBox();
     }
+    */
 }

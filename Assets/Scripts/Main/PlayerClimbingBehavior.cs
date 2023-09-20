@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Constants;
 
 public class PlayerClimbingBehavior : MonoBehaviour
 {
@@ -59,11 +60,11 @@ public class PlayerClimbingBehavior : MonoBehaviour
     string ProcessInput() {
         string s = ""; 
         GameManager manager = GameManager.instance;
-        if (Input.GetKey(manager.forwardKey)) s += "f";
-        if (Input.GetKey(manager.backKey)) s += "b";
-        if (Input.GetKey(manager.rightKey)) s += "r";
-        if (Input.GetKey(manager.leftKey)) s += "l";
-        if (Input.GetKey(manager.takeOffKey)) s += "c";
+        if (Input.GetKey(forwardKey)) s += "f";
+        if (Input.GetKey(backKey)) s += "b";
+        if (Input.GetKey(rightKey)) s += "r";
+        if (Input.GetKey(leftKey)) s += "l";
+        if (Input.GetKey(takeOffKey)) s += "c";
 
         return s;
     }

@@ -6,6 +6,7 @@ using TMPro;
 
 public class PreviousLineCoordinator : MonoBehaviour
 {
+    /*
     public int  ID { get; private set; }
     Conversation.Line line;
     public bool speakerLeft { get; private set; }
@@ -45,4 +46,5 @@ public class PreviousLineCoordinator : MonoBehaviour
     public void SelectLine() {
         ConversationEditor.instance.SelectLine(ID);
     }
+    */
 }

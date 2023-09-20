@@ -23,7 +23,7 @@ public class PlayerFallingBehavior : MonoBehaviour
             stateController.EnterWalkingState();
             return;
         }
-        if (Input.GetKeyDown(GameManager.instance.takeOffKey)) {
+        if (Input.GetKeyDown(Constants.takeOffKey)) {
             stateController.EnterFlyingState();
             return;
         }

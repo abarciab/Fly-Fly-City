@@ -8,12 +8,12 @@ using UnityEditor;
 [ExecuteAlways]
 public class ConversationEditor : MonoBehaviour
 {
-    public static ConversationEditor instance;
+    /*public static ConversationEditor instance;
     [System.Serializable]
     public class TEMPPORTRAITCOLORS
     {
         [HideInInspector] public string name;
-        public Speaker speaker;
+        public SpeakerType speaker;
         public Color speakerColor = Color.white;
     }
     [HideInInspector]public int dataUpdated;
@@ -342,5 +342,5 @@ public class ConversationEditor : MonoBehaviour
             if (ID == previousLineRefs[i].ID) return true;
         }
         return false;
-    }
+    }*/
 }

@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3133ea39fb79d43988309d51c96863, type: 3}
+  m_Name: CommanderIntro
+  m_EditorClassIdentifier: 
+  textFile: {fileID: 4900000, guid: 719ef9563e0884e47b26e982d588de60, type: 3}
+  readText: 0
+  lines:
+  - line: ' Eleanor? Is that really you?'
+    playerSpeak: 1
+  - line: ' Alex, it''s been too long! You look... good.'
+    playerSpeak: 0
+  - line: ' You too, Eleanor. Please, have a seat.'
+    playerSpeak: 1
+  - line: ' Alex, I''m so glad you agreed to meet me.'
+    playerSpeak: 0
+  - line: I know it's been ages, but I needed to talk to someone outside of... all
+      this.
+    playerSpeak: 0
+  - line: ' I figured something must be up. You sound serious.'
+    playerSpeak: 1
+  - line: ' It''s my job, Alex. It''s become all-consuming. I used to be so ambitious,
+      so excited about making a difference. '
+    playerSpeak: 0
+  - line: But now, I'm not sure if I'm making the right choices anymore.
+    playerSpeak: 0
+  - line: ' Eleanor, you''ve always been passionate about your work. What''s changed?'
+    playerSpeak: 1
+  - line: ' I''ve seen too much, Alex. The complexities of my position, the compromises
+      I''ve had to make...'
+    playerSpeak: 0
+  - line: it's left me questioning everything.
+    playerSpeak: 0
+  - line: I want a life beyond this, but I'm terrified that if I step back, people
+      will get hurt.
+    playerSpeak: 0
+  - line: "it's eating away at me. I can't keep up this fa\uFFFDade forever."
+    playerSpeak: 0
+  - line: ' Eleanor, you''ve always been the one who held it together, but it''s
+      okay to show vulnerability. '
+    playerSpeak: 1
+  - line: We all have our breaking points.
+    playerSpeak: 0
+  - line: ' I know, but it''s not just about me. I''ve built connections, relationships,
+      responsibilities.'
+    playerSpeak: 0
+  - line: People rely on me, and I can't let them down.
+    playerSpeak: 0
+  - line: ' Finding a balance won''t be easy, but it''s necessary.'
+    playerSpeak: 1
+  - line: You can't pour from an empty cup, Eleanor.
+    playerSpeak: 0
+  - line: ' I don''t want to let anyone down, Alex, but I also don''t want to lose
+      myself in the process.'
+    playerSpeak: 0
+  - line: ' You won''t lose yourself, Eleanor.'
+    playerSpeak: 1
+  - line: 'You''ve always been strong, and you have the power to make the changes
+      you need. '
+    playerSpeak: 0
+  - line: It's about finding the right balance for you, not just for everyone else.
+    playerSpeak: 0
+  - line: ' Thank you, Alex. Your support means the world to me.'
+    playerSpeak: 0
+  lineIndex: 25

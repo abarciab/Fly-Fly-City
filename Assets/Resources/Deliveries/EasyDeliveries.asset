@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 765a6844f73af7543ac526ee190446ae, type: 3}
+  m_Name: EasyDeliveries
+  m_EditorClassIdentifier: 
+  attributesPerItem: 3
+  locationNamesTxt: {fileID: 4900000, guid: b1a93fec498f8b743ad3c0a73c12124b, type: 3}
+  locationNames:
+  - "Dragon's Den Pub\r"
+  - "Gondolier's Tavern\r"
+  - "Sakura Lounge\r"
+  - "Alpine Alehouse\r"
+  - "Lotus View Hotel\r"
+  - "Renaissance Retreat\r"
+  - "Oasis Inn\r"
+  - "Venetian Palazzo Suites\r"
+  - "Silk & Spice Emporium\r"
+  - "Zenith Antiques\r"
+  - "Alpine Outfitters\r"
+  - "Florentine Gallery\r"
+  - "Bamboo Bistro\r"
+  - "Mediterranean Flavors Grill\r"
+  - "Hanseatic Harbor Restaurant\r"
+  - "Saffron Spice Lounge\r"
+  - "Cobblestone Inn\r"
+  - "Jade Serenity Spa\r"
+  - "Byzantine Treasures\r"
+  - Sistine Sweets Bakery
+  itemNamesTxt: {fileID: 4900000, guid: a69f152f6620ea34ab8659b46b666266, type: 3}
+  itemNames:
+  - "A discreet package\r"
+  - "A small box\r"
+  - "A bundle of papers\r"
+  - "A little bag\r"
+  - "A pocket-sized container\r"
+  - "A tiny parcel\r"
+  - "A stack of envelopes\r"
+  - "A handful of trinkets\r"
+  - "A miniature case\r"
+  - "A sealed pouch\r"
+  - "A cluster of notes\r"
+  - "A wrapped bundle\r"
+  - "A small tin\r"
+  - "A small book\r"
+  - "A sealed container\r"
+  - "A handful of tokens\r"
+  - "A folded letter\r"
+  - "A pack of cards\r"
+  - "A tiny vial\r"
+  - A small locket
+  clientNamesTxt: {fileID: 4900000, guid: 50f0c854cf038c548a48a9a2e34bbfcc, type: 3}
+  clientNames:
+  - Emma Smith
+  - Liam Johnson
+  - Olivia Brown
+  - Noah Davis
+  - Ava Wilson
+  - Isabella Martinez
+  - Sophia Anderson
+  - Mia Taylor
+  - Charlotte Lee
+  - Amelia Harris
+  - Harper Clark
+  - Evelyn White
+  - Abigail Lewis
+  - Emily Walker
+  - Elizabeth Turner
+  - Sofia Scott
+  - Scarlett Green
+  - Grace Hall
+  - Lily Mitchell
+  - Avery King
+  - Zoe Turner
+  - Aiden Baker
+  - Benjamin Carter
+  - Samuel Perez
+  - James Mitchell
+  - Elijah Thompson
+  - Ethan Davis
+  - William Wilson
+  - Oliver Turner
+  - Henry Anderson
+  - Alexander Garcia
+  - Michael Miller
+  - Daniel Wright
+  - Matthew Martin
+  - Joseph Nelson
+  - David Robinson
+  - Andrew Hill
+  - Samuel Adams
+  - Benjamin Baker
+  - Ethan Collins
+  - James Ross
+  - Alexander Cooper
+  - Benjamin Hayes
+  - William Peterson
+  - Oliver Morris
+  - Daniel Sullivan
+  - Matthew Ward
+  - Joseph Price
+  - David Rivera
+  - Samuel Foster
