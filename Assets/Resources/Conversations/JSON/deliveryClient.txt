@@ -1,0 +1,5 @@
+CLIENT:: hey you there
+PLAYER:: Hey...
+CLIENT:: Are you here to get something from me?
+PLAYER:: Yes, I'll take that from you
+CLIENT:: Good, thank you.

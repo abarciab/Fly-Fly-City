@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour {
     // Start & update
     void Start()
     {
-        manager = GameManager.instance;
+        manager = Directory.gMan;
         rb = GetComponent<Rigidbody>();
         originalConstraints = rb.constraints;
         groundedPos = transform.position;

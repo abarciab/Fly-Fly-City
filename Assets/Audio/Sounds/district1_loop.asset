@@ -1,0 +1,46 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 93e0513045be1974d934eb6431407da8, type: 3}
+  m_Name: district1_loop
+  m_EditorClassIdentifier: 
+  clips:
+  - name: 
+    clip: {fileID: 8300000, guid: f0f485c603c12cc47af28f2d93379979, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: 
+    clip: {fileID: 8300000, guid: 043f15876008d1c41bcb85cd7d6e20e9, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: 
+    clip: {fileID: 8300000, guid: 04083921cf8bb8644ae7e07055a3f6f8, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  - name: 
+    clip: {fileID: 8300000, guid: 78fde0ab3761e244daf491e140d11b54, type: 3}
+    looping: 0
+    CustomPitchAndVolume: 0
+    volume: 0
+    pitch: 0
+  type: 0
+  SynchronizePitchAndVolume: 1
+  pitch: 1
+  volume: 0.02
+  voiceLines: 0
+  audioSource: {fileID: 0}
+  instantialized: 0

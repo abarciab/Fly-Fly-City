@@ -18,8 +18,14 @@ public class PlayerFlyingBehavior : MonoBehaviour
     public float takeOffTime;
     [SerializeField] int maxFlaps = 3;
     int flapsRemaining;
-    [SerializeField] float flapSpeed = 15;            //force of a single flap     
-    [HideInInspector] public float flySpeed;                         //the rb.velicty is updated by this amount each frame that the player is flying
+    [SerializeField] float flapSpeed = 15;             
+    [HideInInspector] public float flySpeed;
+
+    [Header("Slowing down")]
+    [SerializeField] float slowSpeedMin = 15;
+    [SerializeField, Range(0, 1)] float slowSpeedpercent = 0.1f;
+    [SerializeField] ParticleSystem slowParticles;
+    [SerializeField] int slowParticleEmitCount;
 
     [Header("Landing")]
     [SerializeField] bool showCollisionSpheres;
@@ -39,8 +45,20 @@ public class PlayerFlyingBehavior : MonoBehaviour
     [SerializeField] GameObject leftWingtip;
     Rigidbody rb;
 
+
+    [Header("Misc")]
+    [SerializeField] LayerMask collisionMask;
+    [SerializeField] Sound slowSound;
+
+    public void AddFlap(int num)
+    {
+        maxFlaps += num;
+    }
+
     void Start()
     {
+        slowSound = Instantiate(slowSound);
+
         stateController = GetComponent<PlayerStateCoordinator>();
         if (!stateController) {
             enabled = false;
@@ -61,6 +79,8 @@ public class PlayerFlyingBehavior : MonoBehaviour
 
     private void Update() {
         if (ShouldFlap()) Flap();
+        SlowDownCheck();
+        Directory.cam.SetFlySpeed(Mathf.Min(flySpeed, 100) / 100);
     }
 
     void FixedUpdate()
@@ -82,7 +102,6 @@ public class PlayerFlyingBehavior : MonoBehaviour
 
     bool ShouldFlap() {
         return Input.GetKeyDown(Constants.jumpKey) && (flapsRemaining > 0);
-
     }
 
     void Flap() {
@@ -136,7 +155,20 @@ public class PlayerFlyingBehavior : MonoBehaviour
         float vertical = -Input.GetAxis("Mouse Y") * mousePitchSpeed;
 
         transform.Rotate(vertical, 0, 0);
-        transform.Rotate(0, 0, horizontal);
+        transform.Rotate(0, 0, horizontal);        
+    }
+
+    void SlowDownCheck()
+    {
+        if (Input.GetKeyDown(KeyCode.S) && flySpeed > Mathf.Abs(slowSpeedMin * 1.5f)) SlowDown();
+    }
+
+    void SlowDown()
+    {
+        float slowSpeed = Mathf.Max(flySpeed * slowSpeedpercent, slowSpeedMin);
+        flySpeed -= slowSpeed;
+        slowSound.Play();
+        slowParticles.Emit(slowParticleEmitCount);
     }
 
     void CheckCollisions() {
@@ -145,10 +177,8 @@ public class PlayerFlyingBehavior : MonoBehaviour
     }
 
     bool CheckCollision(Vector3 rayDir, float rayLength, Vector3 offset) {
-        int allLayers = 1 << 7;
-        allLayers = ~allLayers;
 
-        if (Physics.Raycast(transform.position + offset, transform.TransformDirection(rayDir), out var hit, rayLength, allLayers)) {
+        if (Physics.Raycast(transform.position + offset, transform.TransformDirection(rayDir), out var hit, rayLength, collisionMask)) {
             var angleXZ = Vector3.Angle(hit.normal, Vector3.up);
 
             bool validLanding = angleXZ > validLandingAngleRange.x && angleXZ < validLandingAngleRange.y;

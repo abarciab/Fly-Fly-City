@@ -21,10 +21,10 @@ public class Pickup : MonoBehaviour
         transform.Rotate(Vector3.up, 0.1f);
     }
     private void OnTriggerEnter(Collider other) {
-        if (other.gameObject == GameManager.instance.player) {
+        if (other.gameObject == Directory.gMan.player) {
             switch (type) {
                 case PickupType.scrap:
-                    GameManager.instance.player.GetComponent<PlayerController>().totalFeathers = Mathf.Min(3, GameManager.instance.player.GetComponent<PlayerController>().totalFeathers + value);
+                    Directory.gMan.player.GetComponent<PlayerController>().totalFeathers = Mathf.Min(3, Directory.gMan.player.GetComponent<PlayerController>().totalFeathers + value);
                     break;
                 case PickupType.credits:
                     break;

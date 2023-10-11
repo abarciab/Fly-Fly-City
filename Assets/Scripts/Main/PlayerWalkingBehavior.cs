@@ -54,7 +54,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
             enabled = false;
             return;
         }
-        manager = GameManager.instance;
+        manager = Directory.gMan;
         rb = stateController.rb;
         model = transform.GetChild(0);
     }
@@ -81,7 +81,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
 
 
     bool ShouldTakeOff() {
-        return grounded && Input.GetKeyDown(takeOffKey) && !GameManager.instance.insideLocation;
+        return grounded && Input.GetKeyDown(takeOffKey) && !Directory.gMan.insideLocation;
     }
 
     void TakeOff() {
@@ -118,7 +118,7 @@ public class PlayerWalkingBehavior : MonoBehaviour
             return;
         }
         Vector3 forceDir = GetWorldVectorFromAngle(angle);
-        bool running = Input.GetKey(runningKey) && !GameManager.instance.insideLocation;
+        bool running = Input.GetKey(runningKey) && !Directory.gMan.insideLocation;
         rb.velocity = Vector3.Lerp(rb.velocity, forceDir * (running ? runSpeed : walkSpeed), turnSpeed);
 
         var forwardSpeed = model.forward * Vector3.Dot(model.forward, rb.velocity);
@@ -175,8 +175,6 @@ public class PlayerWalkingBehavior : MonoBehaviour
     }
 
     void ApplyGravity() {
-        //if (grounded) return;
-
         if (rb.velocity.y > 0) {
             rb.AddForce(Vector3.down * jumpUpGravity * (rb.mass * rb.mass));
         }
@@ -186,6 +184,8 @@ public class PlayerWalkingBehavior : MonoBehaviour
     }
 
     bool ShouldJump() {
+        if (manager.insideLocation) return false;
+
         timeSinceJumpButton += Time.deltaTime;
         if (Input.GetKeyDown(jumpKey)) {
             timeSinceJumpButton = 0;

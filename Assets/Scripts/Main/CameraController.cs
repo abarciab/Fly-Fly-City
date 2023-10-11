@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -24,6 +23,7 @@ public class CameraController : MonoBehaviour
     public bool followWhenFlying = true;
     public Vector3 flyingOffset;
     public float flyXAngle;
+    [SerializeField] bool facePlayerFlyDirection;
     [Tooltip("the smoothness of the transition between the walking cam and the flying cam. higher number are smoother, but only to a point")]
     public int flyCamTransitionTime = 100;
     int transitionCount;
@@ -31,23 +31,50 @@ public class CameraController : MonoBehaviour
     Vector3 originalCamPos = Vector3.one * -1;        //the localPos of the cam last time we were in normal mode
     Vector3 originalTargetPos;        //the localPos of the camLookTarget last time we were in normal mode
     bool transitioningBack;
+    [Space()]
+    [SerializeField] Vector2 FOVminMax;
+    float flySpeedPercent;
 
     [Header("clipping avoidance")]
     public float clippingZOffset;
     public float clipZoomSpeed;
     public float minDistFromCamTarget = 1;
     public float camSize = 1;           //the space that needs to be between the camera and the nearest object before it'll zoom out again
+    [SerializeField] LayerMask camRaycastMask;
 
 
     [Header("References")]
     public GameObject cameraLookTarget;     //object that is also a child of camera parent, across the middle from the camera (so the camera is always loking past the character)
     [SerializeField] PlayerStateCoordinator stateController;
     GameObject cameraParent;
+    Camera cam;
 
     [Header("Conversation")]
-    [SerializeField] Transform speaker;
+    [SerializeField] Speaker speaker;
 
-    public void StartConversation(Transform _speaker)
+    public void SetFlySpeed(float speedPercent)
+    {
+        flySpeedPercent = speedPercent;
+    }
+
+    public void LookSpeaker()
+    {
+        if (!speaker) return;
+        StopAllCoroutines();
+
+        transform.position = speaker.GetCamPos();
+        transform.LookAt(speaker.getHeadPos());
+    }
+
+    public void LookPlayer()
+    {
+        StopAllCoroutines();
+        var p = player.GetComponent<PlayerStateCoordinator>();  
+        transform.position = p.GetCamPos();
+        transform.LookAt(p.getHeadPos());
+    }
+
+    public void StartConversation(Speaker _speaker)
     {
         speaker = _speaker;
     }
@@ -62,32 +89,33 @@ public class CameraController : MonoBehaviour
         transform.LookAt(player.transform);
     }
 
-    public void LookAtSpeaker()
-    {
-        transform.LookAt(speaker);
-    }
-
     void Start()
     {
         realOriginalCamPos = transform.localPosition;
         cameraParent = transform.parent.gameObject;
         if (Application.isPlaying && !mouseEnabled) {
             transitionCount = flyCamTransitionTime;
-            stateController = GameManager.instance.player;
+            stateController = Directory.gMan.player;
             LockMouse();
         }
+        cam = Camera.main;
+    }
+
+    private void Update()
+    {
+        if (!Application.isPlaying) return;
+
+        if (Directory.gMan.player.currenState != PossiblePlayerStates.flying) flySpeedPercent = 0;
+        float targetFov = Mathf.Lerp(FOVminMax.x, FOVminMax.y, flySpeedPercent);
+        cam.fieldOfView = Mathf.Lerp(cam.fieldOfView, targetFov, 0.02f);
     }
 
     void LateUpdate()
     {
-        if (speaker != null)
-        {
-            //FocusOnCurrentSpeaker();
-            return;
-        }
+        if (speaker != null) return;
 
         if (Application.isPlaying) {
-            if (Input.GetButtonDown("Fire1") && !mouseEnabled) {
+            if (!Directory.mapMan.gameObject.activeInHierarchy && Input.GetButtonDown("Fire1") && !mouseEnabled) {
                 LockMouse();
             }
             ProcessMouseInput();
@@ -97,11 +125,6 @@ public class CameraController : MonoBehaviour
         else {
             MoveCam();
         }        
-    }
-
-    void FocusOnCurrentSpeaker()
-    {
-        transform.LookAt(speaker);
     }
 
     void ProcessMouseInput()
@@ -143,11 +166,11 @@ public class CameraController : MonoBehaviour
 
                 cameraLookTarget.transform.localPosition = Vector3.Lerp(cameraLookTarget.transform.localPosition, Vector3.zero, transitionSmoothness);
                 transform.localPosition = Vector3.Lerp(transform.localPosition, flyingOffset, transitionSmoothness);
-                
-                inputs.x = Mathf.Lerp(inputs.x, flyXAngle, transitionSmoothness);
+
+                float targetX = facePlayerFlyDirection ? player.transform.eulerAngles.x : flyXAngle;
+                inputs.x = EulerLerp(inputs.x, targetX, transitionSmoothness);
 
                 if (transitionCount <= 0) {
-                    //print("done transitioning");
                     alreadyFollowing = true;
                     transitionCount = flyCamTransitionTime;
                 }
@@ -155,7 +178,9 @@ public class CameraController : MonoBehaviour
             else {
                 cameraLookTarget.transform.localPosition = Vector3.zero;
                 transform.localPosition = flyingOffset;
-                inputs.x = flyXAngle;
+                
+                float targetX = facePlayerFlyDirection ? player.transform.eulerAngles.x : flyXAngle;
+                inputs.x = EulerLerp(inputs.x, targetX, 0.05f);
             }
         }
         else {
@@ -181,6 +206,25 @@ public class CameraController : MonoBehaviour
         cameraParent.transform.localEulerAngles = targetParentRot;
     }
 
+    float EulerLerp(float angle1, float angle2, float smoothness)
+    {
+        angle1 = clampEuler(angle1);
+        angle2 = clampEuler(angle2);
+
+        if (angle1 > 180 && angle2 < 180) angle2 += 360;
+        if (angle1 < 180 && angle2 > 180) angle2 -= 360;
+
+        return Mathf.Lerp(angle1, angle2, smoothness);
+    }
+
+    float clampEuler(float angle)
+    {
+        if (angle > 360) angle %= 360;
+        while (angle < 0) angle += 360;
+
+        return angle;
+    }
+
     IEnumerator TransitionBackToNormalCam()
     {
         if (transitioningBack) { yield break; }
@@ -202,7 +246,7 @@ public class CameraController : MonoBehaviour
         int count = 0;
         while (true) {
             count++; 
-            Physics.Raycast(transform.position, player.transform.position - transform.position, out var hit);
+            Physics.Raycast(transform.position, player.transform.position - transform.position, out var hit, 50, camRaycastMask);
             if (count < 300 && hit.collider != null && hit.collider.tag != "Player" && Mathf.Abs(transform.localPosition.z - cameraLookTarget.transform.localPosition.z) > minDistFromCamTarget) {
                 clippingZOffset = Mathf.Min(clippingZOffset + clipZoomSpeed, 3);
                 modifiedPos += Vector3.forward * clipZoomSpeed;
@@ -226,17 +270,6 @@ public class CameraController : MonoBehaviour
                 break;
             }
         }
-
-        //Debug.DrawRay(transform.position, (player.transform.position - transform.position) * -1, Color.red);
-
-        //raycast behind camera, and if there's room, zoom out
-
-        /*{
-            if (currentDistance > distanceLimits.y && Physics.OverlapSphere(transform.position, 0.1f).Length == 0) {
-                currentDistance -= 0.05f;
-            }
-        }
-        currentOffset.z = currentDistance;*/
     }
 
     bool LineOfSightToPlayer()
@@ -255,51 +288,4 @@ public class CameraController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = false;
     }
-
-    /*if (!controllerScript.flying) {
-            RaycastHit hit;
-            Physics.Raycast(transform.position, target.transform.position - transform.position, out hit);
-            if (hit.collider != null && hit.collider.name != "player" && hit.collider.name != "wings") {
-                currentDistance += 0.05f;
-            }
-            else {
-                if (currentDistance > distanceLimits.y && Physics.OverlapSphere(transform.position, 0.1f).Length == 0) {
-                    currentDistance -= 0.05f;
-                }
-            }
-            currentOffset.z = currentDistance;
-        }
-        
-
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            mouseEnabled = !mouseEnabled;
-        }
-        if (!mouseEnabled) {
-            return;
-        }
-        else {
-            Cursor.lockState = CursorLockMode.Confined;
-        }
-
-        Cursor.visible = false;
-        parentDummy.transform.position = target.transform.position;
-        transform.localPosition = currentOffset;
-
-        float horizontal = Input.GetAxis("Mouse X") * mouseRotSpeed;
-        float vertical = Input.GetAxis("Mouse Y") * mouseRotSpeed;
-        vertical = -Mathf.Clamp(vertical, -90, 90);
-        if (controllerScript.flying || true) {
-            parentDummy.transform.Rotate(vertical, horizontal, 0);
-        }
-        else {
-            parentDummy.transform.Rotate(0, horizontal, 0);
-        }
-        
-        
-        targetDummy.transform.localPosition = lookTargetOffset;
-        transform.LookAt(targetDummy.transform);
-
-        if (!controllerScript.flying) {
-            controllerScript.cameraAlignedEuler = new Vector3(target.transform.eulerAngles.x, parentDummy.transform.eulerAngles.y, target.transform.eulerAngles.z);
-        }*/
 }

@@ -1,8 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
+using UnityEditor.Hardware;
 using UnityEngine;
 
 public enum DeliveryItemAttribute { KeepCold, KeepWarm, Illegal, AvoidMetalDetectors}
@@ -23,6 +22,7 @@ public class Delivery
     public int difficulty;
     public int reward;
     public string client;
+    public float timeLimit;
 }
 
 [CreateAssetMenu(fileName = "New DeliveryFactory")]
@@ -31,10 +31,11 @@ public class DeliveryFactory : ScriptableObject
 
     [Header("Difficulty Settings")]
     [SerializeField, Range(0, 3)] int attributesPerItem;
+    [SerializeField] float distTimeMult = 100, maxReward;
+    public float maxDist = 150;
+    public int minReward = 100;
 
     [Space()]
-    [SerializeField] TextAsset locationNamesTxt;
-    [SerializeField] string[] locationNames = null;
     [SerializeField] TextAsset itemNamesTxt;
     [SerializeField] string[] itemNames = null;
     [SerializeField] TextAsset clientNamesTxt;
@@ -47,33 +48,32 @@ public class DeliveryFactory : ScriptableObject
 
     void Init()
     {
-        if (locationNamesTxt == null || itemNamesTxt == null || clientNamesTxt == null) return;
-        itemNames = locationNames = clientNames = null;
+        if (itemNamesTxt == null || clientNamesTxt == null) return;
+        itemNames = clientNames = null;
 
-        locationNames = Regex.Split(locationNamesTxt.text, "\n");
         itemNames = Regex.Split(itemNamesTxt.text, "\n");
         clientNames = Regex.Split(clientNamesTxt.text, "\n");
     }
 
 
-    public Delivery GenerateDelivery()
+    public Delivery GenerateDelivery(int currentDistrict)
     {
-        if (locationNames == null) Init();
-
+        if (itemNamesTxt == null) Init();
         var delivery = new Delivery();
 
-        int pickupIndex = Random.Range(0, locationNames.Length);
-        int dropOffIndex = pickupIndex;
-        while (dropOffIndex == pickupIndex) dropOffIndex = Random.Range(0, locationNames.Length);
+        float dist;
+        do {
+            delivery.pickupLocation = Directory.current.GetRandomDifferentLocation(new List<string> { Directory.gMan.currentLocation }, currentDistrict).name;
+            delivery.deliveryLocation = Directory.current.GetRandomDifferentLocation(new List<string> { delivery.pickupLocation, Directory.gMan.currentLocation }).name;
+            dist = Directory.current.GetDistance(delivery.pickupLocation, delivery.deliveryLocation);
+        } while (dist > maxDist);
 
-        delivery.pickupLocation = locationNames[pickupIndex];
-        delivery.deliveryLocation = locationNames[dropOffIndex];
+        float distFactor = dist / maxDist;
+        delivery.difficulty = Mathf.RoundToInt(distFactor * 5);
+        delivery.reward = Mathf.RoundToInt(distFactor * maxReward);
+        delivery.timeLimit = distFactor * distTimeMult;
 
         delivery.item = GenerateDeliveryItem();
-
-        delivery.difficulty = 1; //eventually calculate distance between places and factor in item attributes
-        delivery.reward = Random.Range(10, 200) * 10; //difficulty rating + extra reward for certain districts
-
         delivery.client = clientNames[Random.Range(0, clientNames.Length)];
 
         return delivery;

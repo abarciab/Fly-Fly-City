@@ -6,6 +6,13 @@ using System.Text.RegularExpressions;
 using UnityEngine;
 
 
+/*[System.Serializable]
+public class ConversationSegment
+{
+    //public Fact startFact
+    public List<LineData> lines = new List<LineData>();
+}*/
+
 [System.Serializable]
 public class LineData
 {
@@ -50,6 +57,8 @@ public class Conversation : ScriptableObject
 
     void ProcessLine(string line)
     {
+        if (line.Length == 0) return;
+
         string[] parts = Regex.Split(line, "::");
 
         var newLine = new LineData("", lastLineSpokenByPlayer);

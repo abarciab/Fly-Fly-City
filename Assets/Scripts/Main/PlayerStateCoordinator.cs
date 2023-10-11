@@ -29,10 +29,29 @@ public class PlayerStateCoordinator : MonoBehaviour
     [HideInInspector] public ContactPoint groundPoint;
     bool paused;
 
+    [Header("Camera")]
+    [SerializeField] Vector3 headPos;
+    [SerializeField] Vector3 camPos;
+
+    Transform speaker;
     public void SetPaused(bool _paused)
     {
         paused = _paused;
         walkBehav.SetPaused(_paused);
+    }
+
+    public void AddFlap(int num)
+    {
+        flyBehav.AddFlap(num);
+    }
+    public Vector3 getHeadPos()
+    {
+        return transform.TransformPoint(headPos);
+    }
+
+    public Vector3 GetCamPos()
+    {
+        return transform.TransformPoint(camPos);
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -44,10 +63,34 @@ public class PlayerStateCoordinator : MonoBehaviour
         allContactPoints.AddRange(collision.contacts);
     }
 
+    void FaceSpeaker()
+    {
+        FaceSpeaker(speaker);
+    }
+
+    public void FaceSpeaker(Transform speaker)
+    {
+        if (speaker == null) return;
+
+        var pos = speaker.GetComponent<Speaker>().GetStandPos();
+        pos.y = transform.position.y;
+        transform.position = pos;
+
+        model.transform.localEulerAngles = Vector3.zero;
+        this.speaker = speaker;
+        var rot = transform.localEulerAngles;
+        transform.LookAt(speaker);
+        rot.y = transform.localEulerAngles.y;
+        transform.localEulerAngles = rot;
+    }
+
+    public void EndConversation()
+    {
+        walkBehav.enabled = true;
+    }
+
     private void FixedUpdate()
     {
-        //grounded = groundedCheck(out groundPoint, allContactPoints);
-
         if (!walkBehav.enabled) allContactPoints.Clear();
     }
 
@@ -138,7 +181,11 @@ public class PlayerStateCoordinator : MonoBehaviour
         flyBehav.enabled = true;
     }
 
-    public void EnterFallingState() { 
+    public void EnterFallingState() {
+        EnterFlyingState();
+        return;
+
+
         if (!fallingBehav) { return; }
         DisableAllStates();
         currenState = PossiblePlayerStates.falling;
@@ -168,11 +215,19 @@ public class PlayerStateCoordinator : MonoBehaviour
     }
 
     private void Update() {
+        if (Directory.gMan.talking) {
+            walkBehav.enabled = false;
+            FaceSpeaker();
+            return;
+        }
+
+        if (grounded && walkBehav.enabled) climbBehav.ResetStamina();
+
         anim.SetFloat("abs hori vel", Mathf.Abs(rb.velocity.x + rb.velocity.z + (AnyInput()? 1 : 0) ));
         anim.SetFloat("vert vel", rb.velocity.y);
         if (walkBehav) {
             anim.SetBool("grounded", grounded);
-            bool running = Input.GetKey(runningKey) && !GameManager.instance.insideLocation;
+            bool running = Input.GetKey(runningKey) && !Directory.gMan.insideLocation;
             anim.SetBool("walking", AnyInput() && !running);
             anim.SetBool("running", AnyInput() && running);
         }
@@ -185,12 +240,20 @@ public class PlayerStateCoordinator : MonoBehaviour
     }
 
     bool AnyInput() {
-        GameManager manager = GameManager.instance;
+        //GameManager manager = Directory.gMan;
         bool f = Input.GetKey(forwardKey);
         bool b = Input.GetKey(backKey);
         bool l = Input.GetKey(leftKey);
         bool r = Input.GetKey(rightKey);
 
         return (!paused && (f || b || l || r) );
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawWireSphere(transform.TransformPoint(headPos), 0.5f);
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.TransformPoint(camPos), 0.5f);
     }
 }

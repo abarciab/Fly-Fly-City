@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2f3133ea39fb79d43988309d51c96863, type: 3}
+  m_Name: deliveryClient
+  m_EditorClassIdentifier: 
+  textFile: {fileID: 4900000, guid: de14b59a483ba1244a139e070589cdf0, type: 3}
+  readText: 0
+  lines:
+  - line: ' hey you there'
+    playerSpeak: 0
+  - line: ' Hey...'
+    playerSpeak: 1
+  - line: ' Are you here to get something from me?'
+    playerSpeak: 0
+  - line: ' Yes, I''ll take that from you'
+    playerSpeak: 1
+  - line: ' Good, thank you.'
+    playerSpeak: 0
+  lineIndex: 6

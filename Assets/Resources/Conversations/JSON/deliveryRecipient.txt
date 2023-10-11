@@ -1,0 +1,5 @@
+RECIPIENT:: hey you there
+PLAYER:: Hey...
+RECIPIENT:: Do you have something for me?
+PLAYER:: Yes, right here.
+RECIPIENT:: Good, thank you.

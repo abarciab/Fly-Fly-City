@@ -12,7 +12,7 @@ public class goonEnemy : MonoBehaviour
         if (!agent) {
             agent = GetComponent<NavMeshAgent>();
         }
-        target = GameManager.instance.player.gameObject;
+        target = Directory.gMan.player.gameObject;
     }
 
     void Update()

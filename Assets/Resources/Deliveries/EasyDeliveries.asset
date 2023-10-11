@@ -13,28 +13,10 @@ MonoBehaviour:
   m_Name: EasyDeliveries
   m_EditorClassIdentifier: 
   attributesPerItem: 3
-  locationNamesTxt: {fileID: 4900000, guid: b1a93fec498f8b743ad3c0a73c12124b, type: 3}
-  locationNames:
-  - "Dragon's Den Pub\r"
-  - "Gondolier's Tavern\r"
-  - "Sakura Lounge\r"
-  - "Alpine Alehouse\r"
-  - "Lotus View Hotel\r"
-  - "Renaissance Retreat\r"
-  - "Oasis Inn\r"
-  - "Venetian Palazzo Suites\r"
-  - "Silk & Spice Emporium\r"
-  - "Zenith Antiques\r"
-  - "Alpine Outfitters\r"
-  - "Florentine Gallery\r"
-  - "Bamboo Bistro\r"
-  - "Mediterranean Flavors Grill\r"
-  - "Hanseatic Harbor Restaurant\r"
-  - "Saffron Spice Lounge\r"
-  - "Cobblestone Inn\r"
-  - "Jade Serenity Spa\r"
-  - "Byzantine Treasures\r"
-  - Sistine Sweets Bakery
+  distTimeMult: 350
+  maxReward: 1000
+  maxDist: 150
+  minReward: 100
   itemNamesTxt: {fileID: 4900000, guid: a69f152f6620ea34ab8659b46b666266, type: 3}
   itemNames:
   - "A discreet package\r"

@@ -5,49 +5,45 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour
 {
-    public static UIManager instance;
+    [Header("Flightspeed")]
+    [SerializeField] GameObject flightSpeedMenu;
+    [SerializeField] GameObject flightSpeedPrompt;
 
-    [Header("Dialogue references")]
-    public Image leftPortrait;
-    public Image rightPortrait;
-    public GameObject textBox;
-    Conversation activeConvo;
+    [Header("Map")]
+    [SerializeField] GameObject map;
 
-    private void Awake() {
-        instance = this;
+    [Header("Misc")]
+    public GameObject skillTree;
+    [SerializeField] StatsDisplay stats;
+
+    public bool busy {  get { return skillTree.activeInHierarchy || flightSpeedMenu.activeInHierarchy || map.activeInHierarchy;  } }
+
+    private void Update()
+    {
+        flightSpeedPrompt.SetActive(!busy && Directory.gMan.insideLocation && !Directory.fMan.onDelivery);
     }
 
-    /*/dialogue display functions
-    public void StartConversation(Conversation convo) {
-        activeConvo = convo;
-        DisplayLine(0);
+    public void OpenSkillTree()
+    {
+        stats.DisplayMoney(true);
+        skillTree.SetActive(true);
+        Directory.gMan.player.SetPaused(true);
+        Directory.cam.enabled = false;
+        SetMouseState(true);
     }
 
-    void DisplayLine(int currentLine) {
-        if (activeConvo.lines.Count <= currentLine) {
-            activeConvo = null;
-            return;
-        }
+    public void CloseSkillTree()
+    {
+        stats.DisplayMoney(false);
+        skillTree.SetActive(false);
+        Directory.gMan.player.SetPaused(false);
+        Directory.cam.enabled = true;
+        SetMouseState(false);
+    }
 
-        Conversation.Speaker currentSpeaker = null;
-        foreach (Conversation.Speaker speaker in activeConvo.speakers) {
-            if (speaker.name == activeConvo.lines[currentLine].speaker) {
-                currentSpeaker = speaker;
-                break;
-            }
-        }
-
-        //activate the other speaker
-        leftPortrait.sprite = currentSpeaker.portrait;
-        rightPortrait.sprite = currentSpeaker.portrait;
-        rightPortrait.gameObject.SetActive(!rightPortrait.gameObject.activeInHierarchy);
-        leftPortrait.gameObject.SetActive(!leftPortrait.gameObject.activeInHierarchy);
-        
-
-    
-    }*/
-
-    private void Update() {
-        
+    void SetMouseState(bool free)
+    {
+        Cursor.visible = free;
+        Cursor.lockState = free ? CursorLockMode.Confined : CursorLockMode.Locked;
     }
 }
