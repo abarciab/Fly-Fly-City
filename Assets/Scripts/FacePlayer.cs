@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class FacePlayer : MonoBehaviour
 {
-    [SerializeField] bool yOnly = true;
+    [SerializeField] bool yOnly = true, faceCam = true;
     Transform player;
     
 
     void Start()
     {
-        player = Directory.cam.transform;
+        player = faceCam ? Directory.cam.transform : Directory.player.transform;
     }
 
     void Update()

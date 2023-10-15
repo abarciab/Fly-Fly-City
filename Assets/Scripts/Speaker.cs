@@ -67,6 +67,9 @@ public class Speaker : MonoBehaviour
 
     void StartConversation()
     {
+        var face = GetComponent<FacePlayer>();
+        if (face) face.enabled = false;
+
         conversation.StartConvo();
         talking = true;
         Directory.gMan.StartConversation(conversation, this);
@@ -75,6 +78,9 @@ public class Speaker : MonoBehaviour
 
     public void EndConversation()
     {
+        var face = GetComponent<FacePlayer>();
+        if (face) face.enabled = true;
+
         if (anim) anim.SetBool(talkingBool, false);
         if (advanceDeliveryOnConvoComplete) Directory.fMan.AdvanceDeliveryStage();
         if (!repeat) enabled = false;

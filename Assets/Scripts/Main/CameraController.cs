@@ -61,7 +61,6 @@ public class CameraController : MonoBehaviour
     {
         if (!speaker) return;
         StopAllCoroutines();
-
         transform.position = speaker.GetCamPos();
         transform.LookAt(speaker.getHeadPos());
     }
@@ -103,7 +102,7 @@ public class CameraController : MonoBehaviour
 
     private void Update()
     {
-        if (!Application.isPlaying) return;
+        if (!Application.isPlaying || speaker != null) return;
 
         if (Directory.gMan.player.currenState != PossiblePlayerStates.flying) flySpeedPercent = 0;
         float targetFov = Mathf.Lerp(FOVminMax.x, FOVminMax.y, flySpeedPercent);

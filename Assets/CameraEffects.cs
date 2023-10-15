@@ -13,6 +13,7 @@ public class CameraEffects : MonoBehaviour
     [SerializeField] Volume ppVolume;
     [SerializeField] float targetExposure, deltaThreshold = 0.1f;
     [SerializeField] Camera cam;
+    [SerializeField] Vector2 minMaxExposure;
 
     private void Update()
     {
@@ -25,6 +26,7 @@ public class CameraEffects : MonoBehaviour
 
         if (lumDelta < 0) targetExposure -= exposureChangeSpeed;
         if (lumDelta > 0) targetExposure += exposureChangeSpeed;
+        targetExposure = Mathf.Clamp(targetExposure, minMaxExposure.x, minMaxExposure.y);
 
         ppVolume.profile.TryGet<ColorAdjustments>(out var color);
         color.postExposure.value = targetExposure;
